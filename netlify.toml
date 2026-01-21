@@ -3,7 +3,8 @@
 
 [build]
   base = "frontend"
-  command = "npm run build"
+  # Use Netlify's DEPLOY_URL env var so expo export gets a valid HTTPS public URL in CI
+  command = "npx expo export --platform web --output-dir dist --public-url $DEPLOY_URL"
   publish = "dist"
   node_version = "18.17.0"
 
