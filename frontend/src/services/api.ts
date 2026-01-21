@@ -1,7 +1,10 @@
 import axios, { AxiosInstance } from 'axios';
 import { LeaderboardEntry, SearchResult, LeaderboardStats } from '../types';
 
-const API_BASE_URL = 'http://localhost:8080';
+// Read API base URL from environment so Netlify (or other hosts)
+// can point the frontend to the deployed backend. Falls back to
+// localhost for local development.
+const API_BASE_URL = (process.env.REACT_APP_API_BASE_URL as string) || 'http://localhost:8080';
 
 class ApiService {
   private client: AxiosInstance;
