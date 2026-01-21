@@ -1,0 +1,24 @@
+# Netlify Configuration
+# Deploy frontend only (backend runs separately)
+
+[build]
+  command = "cd frontend && npm run build"
+  publish = "frontend/dist"
+
+[dev]
+  command = "cd frontend && npm start"
+  port = 3000
+
+# Redirect API calls to backend
+[[redirects]]
+  from = "/api/*"
+  to = "http://localhost:8080/:splat"
+  status = 200
+  force = false
+
+# Environment variables
+[env]
+  [env.production]
+    API_BASE_URL = "https://your-backend-url.com"
+  [env.development]
+    API_BASE_URL = "http://localhost:8080"

@@ -1,0 +1,6 @@
+{
+  "presets": [
+    ["babel-preset-expo", { "jsxRuntime": "automatic" }],
+    "@babel/preset-typescript"
+  ]
+}
