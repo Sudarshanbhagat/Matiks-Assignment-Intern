@@ -376,14 +376,52 @@ func main() {
 	stopChan := make(chan struct{})
 	go lb.SimulateTraffic(stopChan)
 
-	// Register API endpoints
-	http.HandleFunc("/search", lb.handleSearch)
-	http.HandleFunc("/leaderboard", lb.handleLeaderboard)
-	http.HandleFunc("/stats", lb.handleStats)
+	// CORS Middleware - Allow specific Netlify domain and localhost for development
+	corsMiddleware := func(next http.HandlerFunc) http.HandlerFunc {
+		return func(w http.ResponseWriter, r *http.Request) {
+			origin := r.Header.Get("Origin")
 
-	// Enable CORS so frontend can call us from a different origin
+			// Allow specific origins
+			allowedOrigins := map[string]bool{
+				"https://sage-blini-5bb0f7.netlify.app": true, // Your Netlify domain
+				"http://localhost:3000":                 true, // Local development
+				"http://localhost:8080":                 true, // Local backend dev
+				"*":                                     true, // Fallback for Expo Go app and development
+			}
+
+			if allowedOrigins[origin] || origin == "" {
+				w.Header().Set("Access-Control-Allow-Origin", origin)
+				if origin == "" {
+					w.Header().Set("Access-Control-Allow-Origin", "*")
+				}
+			}
+
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+			w.Header().Set("Access-Control-Max-Age", "86400")
+
+			if r.Method == http.MethodOptions {
+				w.WriteHeader(http.StatusOK)
+				return
+			}
+
+			next(w, r)
+		}
+	}
+
+	// Wrap handlers with CORS middleware
+	http.HandleFunc("/search", corsMiddleware(lb.handleSearch))
+	http.HandleFunc("/leaderboard", corsMiddleware(lb.handleLeaderboard))
+	http.HandleFunc("/stats", corsMiddleware(lb.handleStats))
+
+	// Fallback for unmapped routes
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*") // Frontend: http://localhost:3000 or Expo
+		origin := r.Header.Get("Origin")
+		if origin != "" {
+			w.Header().Set("Access-Control-Allow-Origin", origin)
+		} else {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+		}
 		w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 

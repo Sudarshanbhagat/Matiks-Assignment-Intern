@@ -3,7 +3,7 @@
 
 [build]
   base = "frontend"
-  command = "npx expo export --platform web --output-dir dist --public-url /"
+  command = "npx expo export --platform web --output-dir dist"
   publish = "dist"
   node_version = "18.17.0"
 
