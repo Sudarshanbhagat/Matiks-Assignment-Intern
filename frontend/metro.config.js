@@ -1,3 +1,9 @@
 const { getDefaultConfig } = require('expo/metro-config');
 
-module.exports = getDefaultConfig(__dirname);
+const config = getDefaultConfig(__dirname);
+
+// Add explicit web platform support
+config.resolver.platforms = ['ios', 'android', 'web', 'native'];
+config.resolver.assetExts.push('cjs');
+
+module.exports = config;
