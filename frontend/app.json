@@ -2,6 +2,7 @@
   "expo": {
     "name": "Matiks Leaderboard",
     "slug": "matiks-leaderboard",
+    "scheme": "matiks",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,8 +25,7 @@
       }
     },
     "web": {
-      "favicon": "./assets/icon.png",
-      "bundler": "webpack"
+      "favicon": "./assets/icon.png"
     }
   }
 }
