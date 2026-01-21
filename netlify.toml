@@ -2,12 +2,13 @@
 # Deploy frontend only (backend runs separately)
 
 [build]
-  command = "cd frontend && npm install && npm run build"
-  publish = "frontend/dist"
+  base = "frontend"
+  command = "npm run build"
+  publish = "dist"
   node_version = "18.17.0"
 
 [dev]
-  command = "cd frontend && npm start"
+  command = "npm start"
   port = 3000
 
 # Redirect API calls to backend
@@ -20,6 +21,6 @@
 # Environment variables
 [env]
   [env.production]
-    API_BASE_URL = "https://your-backend-url.com"
+    REACT_APP_API_BASE_URL = "https://your-backend-url.com"
   [env.development]
-    API_BASE_URL = "http://localhost:8080"
+    REACT_APP_API_BASE_URL = "http://localhost:8080"
