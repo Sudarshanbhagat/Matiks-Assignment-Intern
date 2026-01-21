@@ -5,6 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "platforms": ["ios", "android", "web"],
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -24,13 +25,7 @@
     },
     "web": {
       "favicon": "./assets/icon.png",
-      "bundler": "webpack",
-      "build": {
-        "babel": {
-          "include": ["@react-navigation"]
-        }
-      },
-      "output": "static"
+      "bundler": "webpack"
     }
   }
 }
