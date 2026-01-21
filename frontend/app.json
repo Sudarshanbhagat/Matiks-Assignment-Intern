@@ -24,11 +24,13 @@
     },
     "web": {
       "favicon": "./assets/icon.png",
+      "bundler": "webpack",
       "build": {
         "babel": {
           "include": ["@react-navigation"]
         }
-      }
+      },
+      "output": "static"
     }
   }
 }
