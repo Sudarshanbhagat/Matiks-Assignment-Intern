@@ -6,6 +6,7 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"os"
 	"sort"
 	"strings"
 	"sync"
@@ -17,7 +18,7 @@ const (
 	MaxRating   = 5000
 	BucketSize  = MaxRating + 1
 	SearchLimit = 50
-	Port        = ":8080"
+	Port        = "8080"
 )
 
 // User represents a leaderboard user. Simple, immutable record
@@ -394,8 +395,16 @@ func main() {
 		http.NotFound(w, r)
 	})
 
-	fmt.Printf("Starting leaderboard server on http://localhost%s\n", Port)
-	if err := http.ListenAndServe(Port, nil); err != nil {
+	// Allow hosting platforms to specify the port via the PORT env var.
+	// Default to the constant `Port` (8080) for local development.
+	listenPort := Port
+	if envPort := os.Getenv("PORT"); envPort != "" {
+		listenPort = envPort
+	}
+
+	addr := fmt.Sprintf(":%s", listenPort)
+	fmt.Printf("Starting leaderboard server on http://localhost%s\n", addr)
+	if err := http.ListenAndServe(addr, nil); err != nil {
 		log.Fatalf("Server startup failed: %v", err)
 	}
 }
