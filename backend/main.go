@@ -290,7 +290,14 @@ func (lb *Leaderboard) SimulateTraffic(stopChan <-chan struct{}) {
 // handleSearch handles GET /search?username={query}. We return each match with
 // its *global* rank computed at request time. Frontend never caches or guesses ranks.
 func (lb *Leaderboard) handleSearch(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 	w.Header().Set("Content-Type", "application/json")
+
+	if r.Method == http.MethodOptions {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
 
 	query := r.URL.Query().Get("username")
 	if query == "" {
@@ -307,7 +314,14 @@ func (lb *Leaderboard) handleSearch(w http.ResponseWriter, r *http.Request) {
 // prevent abuse (1 to 1000), default to 100. This ensures we never iterate over
 // more buckets than necessary.
 func (lb *Leaderboard) handleLeaderboard(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 	w.Header().Set("Content-Type", "application/json")
+
+	if r.Method == http.MethodOptions {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
 
 	limit := 100
 	if limitStr := r.URL.Query().Get("limit"); limitStr != "" {
@@ -324,10 +338,18 @@ func (lb *Leaderboard) handleLeaderboard(w http.ResponseWriter, r *http.Request)
 
 // handleStats handles GET /stats. Simple endpoint to report system state (useful during development).
 func (lb *Leaderboard) handleStats(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+	w.Header().Set("Content-Type", "application/json")
+
+	if r.Method == http.MethodOptions {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
 	lb.mu.RLock()
 	defer lb.mu.RUnlock()
 
-	w.Header().Set("Content-Type", "application/json")
 	stats := map[string]interface{}{
 		"total_users": len(lb.users),
 	}

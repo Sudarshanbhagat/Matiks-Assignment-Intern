@@ -22,13 +22,13 @@ const ImageVerifier: React.FC = () => {
   });
 
   const checkImage = (uri: string, name: keyof ImageStatus) => {
-    if (typeof window === 'undefined') {
+    if (typeof globalThis === 'undefined' || !(globalThis as any).Image) {
       setImageStatus(prev => ({ ...prev, [name]: 'ok' }));
       return;
     }
 
     try {
-      const img = new (window as any).Image();
+      const img = new (globalThis as any).Image();
       img.onload = () => {
         setImageStatus(prev => ({ ...prev, [name]: 'ok' }));
         console.log(`✓ ${name} loaded successfully`);

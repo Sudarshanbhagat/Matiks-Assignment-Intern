@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import { LeaderboardEntry, SearchResult, LeaderboardStats } from '../types';
 
-const API_BASE_URL = 'http://192.168.1.9:8080';
+const API_BASE_URL = 'http://localhost:8080';
 
 class ApiService {
   private client: AxiosInstance;
