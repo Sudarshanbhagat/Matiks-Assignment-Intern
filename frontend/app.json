@@ -21,6 +21,14 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#F7F7F7"
       }
+    },
+    "web": {
+      "favicon": "./assets/icon.png",
+      "build": {
+        "babel": {
+          "include": ["@react-navigation"]
+        }
+      }
     }
   }
 }
