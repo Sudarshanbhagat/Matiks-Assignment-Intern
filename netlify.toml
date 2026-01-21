@@ -1,10 +1,9 @@
 # Netlify Configuration
-# Deploy frontend only (backend runs separately)
+# Deploy frontend only (backend runs separately on Render)
 
 [build]
   base = "frontend"
-  # Use a small CI wrapper to compute a valid HTTPS public URL (DEPLOY_PRIME_URL/DEPLOY_URL)
-  command = "node scripts/build-web.js"
+  command = "npx expo export --platform web --output-dir dist --public-url /"
   publish = "dist"
   node_version = "18.17.0"
 
@@ -12,21 +11,22 @@
   command = "npm start"
   port = 3000
 
-# Redirect API calls to backend
+# Redirect API calls to live Render backend
 [[redirects]]
   from = "/api/*"
-  to = "http://localhost:8080/:splat"
+  to = "https://matiks-assignment-intern.onrender.com/:splat"
   status = 200
   force = false
 
-# Environment variables
-[env]
-  [env.production]
-    REACT_APP_API_BASE_URL = "https://matiks-assignment-intern.onrender.com"
-  [env.development]
-    REACT_APP_API_BASE_URL = "http://localhost:8080"
-
+# Single Page App rewrite
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+
+# Environment variables
+[env.production]
+  REACT_APP_API_BASE_URL = "https://matiks-assignment-intern.onrender.com"
+
+[env.development]
+  REACT_APP_API_BASE_URL = "http://localhost:8080"
