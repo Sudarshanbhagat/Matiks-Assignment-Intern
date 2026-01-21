@@ -21,6 +21,11 @@
 # Environment variables
 [env]
   [env.production]
-    REACT_APP_API_BASE_URL = "https://your-backend-url.com"
+    REACT_APP_API_BASE_URL = "https://matiks-assignment-intern.onrender.com"
   [env.development]
     REACT_APP_API_BASE_URL = "http://localhost:8080"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
