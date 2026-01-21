@@ -4,7 +4,7 @@
 [build]
   base = "frontend"
   # Use a small CI wrapper to compute a valid HTTPS public URL (DEPLOY_PRIME_URL/DEPLOY_URL)
-  command = "bash frontend/scripts/export-web-ci.sh"
+  command = "bash scripts/export-web-ci.sh"
   publish = "dist"
   node_version = "18.17.0"
 
