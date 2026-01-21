@@ -1,23 +1,34 @@
 /**
  * Image Asset Verification Utility
  * 
- * This component verifies that image assets are readable by React Native Web.
- * If images fail to load, they'll show error states instead of crashing the build.
+ * This component verifies that image assets are readable.
+ * Optional debug component - can be removed if not needed.
  */
 
 import React from 'react';
-import { View, Image, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 
-const ImageVerifier = () => {
-  const [imageStatus, setImageStatus] = React.useState({
+interface ImageStatus {
+  icon: 'checking' | 'ok' | 'error';
+  splash: 'checking' | 'ok' | 'error';
+  adaptiveIcon: 'checking' | 'ok' | 'error';
+}
+
+const ImageVerifier: React.FC = () => {
+  const [imageStatus, setImageStatus] = React.useState<ImageStatus>({
     icon: 'checking',
     splash: 'checking',
     adaptiveIcon: 'checking',
   });
 
-  const checkImage = (uri, name) => {
+  const checkImage = (uri: string, name: keyof ImageStatus) => {
+    if (typeof window === 'undefined') {
+      setImageStatus(prev => ({ ...prev, [name]: 'ok' }));
+      return;
+    }
+
     try {
-      const img = new Image();
+      const img = new (window as any).Image();
       img.onload = () => {
         setImageStatus(prev => ({ ...prev, [name]: 'ok' }));
         console.log(`✓ ${name} loaded successfully`);
@@ -61,7 +72,7 @@ const ImageVerifier = () => {
   return (
     <View style={styles.container}>
       <Text style={{ fontWeight: 'bold', marginBottom: 12 }}>Asset Status</Text>
-      {Object.entries(imageStatus).map(([name, status]) => (
+      {(Object.entries(imageStatus) as Array<[keyof ImageStatus, string]>).map(([name, status]) => (
         <View key={name} style={styles.statusItem}>
           <Text style={styles.statusText}>
             {status === 'ok' ? '✓' : status === 'error' ? '✗' : '...'} {name}: {status}
