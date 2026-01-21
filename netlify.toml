@@ -2,7 +2,7 @@
 # Deploy frontend only (backend runs separately)
 
 [build]
-  command = "cd frontend && rm -rf .expo dist && npm install && npm run build:web"
+  command = "cd frontend && npm install && npm run build"
   publish = "frontend/dist"
   node_version = "18.17.0"
 
