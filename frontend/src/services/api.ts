@@ -1,15 +1,9 @@
 import axios, { AxiosInstance } from 'axios';
 import { LeaderboardEntry, SearchResult, LeaderboardStats } from '../types';
 
-// Read API base URL from environment so Netlify (or other hosts)
-// can point the frontend to the deployed backend. Falls back to
-// localhost for local development.
+// This value is injected at build time by build-inject.js
+// For development, defaults to localhost:8080
 const API_BASE_URL = (process.env.REACT_APP_API_BASE_URL as string) || 'http://localhost:8080';
-
-// Debug: log the API URL to console
-if (typeof window !== 'undefined') {
-  console.log('[ApiService] API Base URL:', API_BASE_URL);
-}
 
 class ApiService {
   private client: AxiosInstance;
@@ -19,6 +13,7 @@ class ApiService {
       baseURL: API_BASE_URL,
       timeout: 10000,
     });
+    console.log('[ApiService] Using API URL:', API_BASE_URL);
   }
 
   /**
