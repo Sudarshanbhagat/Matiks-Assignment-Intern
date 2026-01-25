@@ -291,8 +291,6 @@ func (lb *Leaderboard) SimulateTraffic(stopChan <-chan struct{}) {
 // handleSearch handles GET /search?username={query}. We return each match with
 // its *global* rank computed at request time. Frontend never caches or guesses ranks.
 func (lb *Leaderboard) handleSearch(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 	w.Header().Set("Content-Type", "application/json")
 
 	if r.Method == http.MethodOptions {
@@ -307,7 +305,6 @@ func (lb *Leaderboard) handleSearch(w http.ResponseWriter, r *http.Request) {
 	}
 
 	results := lb.SearchUsers(query)
-	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(results)
 }
 
@@ -315,8 +312,6 @@ func (lb *Leaderboard) handleSearch(w http.ResponseWriter, r *http.Request) {
 // prevent abuse (1 to 1000), default to 100. This ensures we never iterate over
 // more buckets than necessary.
 func (lb *Leaderboard) handleLeaderboard(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 	w.Header().Set("Content-Type", "application/json")
 
 	if r.Method == http.MethodOptions {
@@ -333,14 +328,11 @@ func (lb *Leaderboard) handleLeaderboard(w http.ResponseWriter, r *http.Request)
 	}
 
 	leaderboard := lb.GetTopLeaderboard(limit)
-	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(leaderboard)
 }
 
 // handleStats handles GET /stats. Simple endpoint to report system state (useful during development).
 func (lb *Leaderboard) handleStats(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 	w.Header().Set("Content-Type", "application/json")
 
 	if r.Method == http.MethodOptions {
@@ -376,24 +368,17 @@ func main() {
 	stopChan := make(chan struct{})
 	go lb.SimulateTraffic(stopChan)
 
-	// CORS Middleware - Allow specific Netlify domain and localhost for development
+	// CORS Middleware - Allow all origins for development. In production, restrict to known domains.
 	corsMiddleware := func(next http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
 			origin := r.Header.Get("Origin")
 
-			// Allow specific origins
-			allowedOrigins := map[string]bool{
-				"https://sage-blini-5bb0f7.netlify.app": true, // Your Netlify domain
-				"http://localhost:3000":                 true, // Local development
-				"http://localhost:8080":                 true, // Local backend dev
-				"*":                                     true, // Fallback for Expo Go app and development
-			}
-
-			if allowedOrigins[origin] || origin == "" {
+			// Allow all origins. For production, whitelist specific domains:
+			// allowedOrigins := map[string]bool{"https://sage-blini-5bb0f7.netlify.app": true, "http://localhost:3000": true}
+			if origin != "" {
 				w.Header().Set("Access-Control-Allow-Origin", origin)
-				if origin == "" {
-					w.Header().Set("Access-Control-Allow-Origin", "*")
-				}
+			} else {
+				w.Header().Set("Access-Control-Allow-Origin", "*")
 			}
 
 			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
