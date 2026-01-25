@@ -7,8 +7,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "build": "REACT_APP_API_BASE_URL=https://matiks-assignment-intern.onrender.com npx expo export --platform web --output-dir dist --public-url /",
-    "build:web": "REACT_APP_API_BASE_URL=https://matiks-assignment-intern.onrender.com npx expo export --platform web --output-dir dist --public-url /"
+    "build": "npx expo export --platform web --output-dir dist",
+    "build:web": "npx expo export --platform web --output-dir dist"
   },
   "dependencies": {
     "@expo/metro-runtime": "^6.1.2",
