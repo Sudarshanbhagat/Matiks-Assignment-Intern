@@ -3,7 +3,7 @@
 
 [build]
   base = "frontend"
-  command = "npm install && npm run build"
+  command = "npm install && REACT_APP_API_BASE_URL=https://matiks-assignment-intern.onrender.com npx expo export --platform web --output-dir dist"
   publish = "dist"
   node_version = "18.17.0"
 

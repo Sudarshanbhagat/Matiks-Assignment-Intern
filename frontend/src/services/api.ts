@@ -6,6 +6,11 @@ import { LeaderboardEntry, SearchResult, LeaderboardStats } from '../types';
 // localhost for local development.
 const API_BASE_URL = (process.env.REACT_APP_API_BASE_URL as string) || 'http://localhost:8080';
 
+// Debug: log the API URL to console
+if (typeof window !== 'undefined') {
+  console.log('[ApiService] API Base URL:', API_BASE_URL);
+}
+
 class ApiService {
   private client: AxiosInstance;
 
